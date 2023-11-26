@@ -1,5 +1,8 @@
 import static javax.swing.JOptionPane.showInputDialog;
 import static javax.swing.JOptionPane.showMessageDialog;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static java.lang.Integer.parseInt;
 
@@ -27,7 +30,11 @@ public class GerenciaMusicas {
                     break;
                 }
                 case 3:{
-                    musicaDAO.listar();
+                    var musicas = musicaDAO.listar();
+                    Collections.sort(musicas, new ComparadorPorAvaliacao());
+                    for (int i = 0; i < musicas.size(); i++) {
+                        showMessageDialog(null, musicas.get(i));
+                    }
                     break;
                 }
                 case 4:{

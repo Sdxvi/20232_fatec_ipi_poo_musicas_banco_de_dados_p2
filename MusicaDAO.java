@@ -1,6 +1,7 @@
 import java.sql.PreparedStatement;
-import static javax.swing.JOptionPane.showMessageDialog;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+
 public class MusicaDAO{
     public void cadastrar(Musica musica) throws Exception{
        //1. Especificar o comando SQL
@@ -43,10 +44,11 @@ public class MusicaDAO{
         }
         
     }
-    public void listar() throws Exception{
-        //Esse método usa JOptionPane: Não faça isso!
+    public ArrayList listar() throws Exception{
+
+        var musicas = new ArrayList<Musica>();
         //1. Especificar o comando SQL
-        var sql = "SELECT titulo, avaliacao FROM tb_musica";
+        var sql = "SELECT titulo, avaliacao FROM tb_musica WHERE ativo = 1";
         //2. Abrir uma conexão com o banco
         try(
             var conexao = ConnectionFactory.conectar();
@@ -54,25 +56,23 @@ public class MusicaDAO{
             PreparedStatement ps = conexao.prepareStatement(sql);
         ){
             try(
+                //5. Executar o comando
                 ResultSet rs = ps.executeQuery();
             )
             {
-                //4. Substituir os eventuais placeholders
-                //5. Executar o comando
-            
                 //6. Manipular os dados da tabela resultante
                 while(rs.next()){
                     String titulo = rs.getString("titulo");
                     int avaliacao = rs.getInt("avaliacao");
                     var musica = new Musica(titulo, avaliacao);
-                    showMessageDialog(null, musica);
+                    musicas.add(musica);
                 }
             }
             
         //7. Fechar tudo
         //o try-with-resources já fez
         }
-
+        return musicas;
     }
     public void remover(Musica musica) throws Exception{
         //1. Especificar o comando SQL
